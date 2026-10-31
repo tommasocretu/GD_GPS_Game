@@ -24,15 +24,17 @@ Una vertical slice Android in portrait, 3D low-poly in stile Pokémon GO: un ava
 - [Coordinate GPS, proiezione e scala del mondo](issues/04-coordinate-system-world-scale.md): piano tangente locale ellissoidico (1 unità = 1 m), Mercator solo per le tile, floating origin ogni 2 km, lat/lon in float64.
 - [Pipeline di build Android e distribuzione APK](issues/05-android-build-pipeline.md): Gradle build con minSdk 26/targetSdk 36, script `scripts/build_android.sh`, APK debug firmata e validata sul Fairphone Gen 6.
 - [Avatar low-poly CC0 con animazioni](issues/06-avatar-asset.md): Quaternius Ultimate Modular Men `Casual_Male`, CC0, glTF 1,858 m con Idle/Walk/Run.
+- [Modello di movimento e smoothing GPS](issues/07-movement-model.md): validazione dei fix + target pesato sull'accuratezza + molla critica in `_process`; lock da fermo, snap oltre 15 m, stati `INIT/OK/WEAK/STALE/LOST/DENIED`, niente collisioni.
+- [Camera, inquadratura e composizione visiva](issues/08-camera-composition.md): prospettiva fissa north-up, FOV 50°, pitch 27°, camera 13 m/18,5 m, avatar al 65%; follow 0,15 s, braccio di collisione, HUD in safe area, nebbia 180–320 m, nessuno zoom.
+- [Prototipo di movimento GPS](issues/11-gps-movement-prototype.md): implementato su desktop e in APK (fake GPS, plugin Android, avatar, camera, HUD, test headless); test sul Fairphone ancora da fare. Offset camera scalato a ×0,875 per rispettare l'8,8% di altezza apparente.
 
 ## Not yet specified
 
 - Field test end-to-end della slice su Fairphone Gen 6: protocollo operativo, percorso, raccolta log.
-- Gestione dei casi degradati: permesso GPS negato/revocato, segnale assente, mock location, GPS impreciso in centro città.
 - Comportamento con dati OSM incompleti: edifici mancanti, footprint fuori scala, strade non allineate.
 - Performance e memoria in zone dense di edifici; budget di draw call, texture e mesh.
 - Fallback di sviluppo desktop con fake GPS e registrazione/riproduzione di percorsi.
-- Dettagli di HUD/UI: cosa mostrare, layout portrait, safe area.
+- Palette, materiali e stile visivo definitivo di mappa e HUD (prototipo 09).
 - Privacy della posizione: dati solo on-device, nessun backend.
 - Aggiornamenti dell'app e firma delle APK distribuite via WhatsApp.
 - Eventuale passaggio da raster a vector tile se la qualità non basta.

@@ -24,6 +24,13 @@ mono_crash.*.json
 # Uncomment if your project does not version PCK files as runtime dependencies.
 # *.pck
 
+# Local secrets (MapTiler key, etc.)
+/secrets.cfg
+
+# Development screenshots
+/screenshot*.png
+/screenshot*.png.import
+
 # Android build output
 /build/
 /android/build/.gradle/

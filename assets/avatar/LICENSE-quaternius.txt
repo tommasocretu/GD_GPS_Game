@@ -1,0 +1,22 @@
+Casual_Male — Quaternius "Ultimate Modular Men" pack (February 2022)
+=====================================================================
+
+Asset:   Casual_Male.glb (GLB, 1,430,660 bytes, 24 animations)
+Author:  Quaternius (https://quaternius.com)
+Pack:    Ultimate Modular Men — https://quaternius.com/packs/ultimatemodularcharacters.html
+Source:  Poly Pizza mirror — https://poly.pizza/m/kZ3DmIoGip
+         Direct GLB — https://static.poly.pizza/90a9e2d4-053f-42f1-99a2-8f5e1180ea7f.glb
+
+License: CC0 1.0 Universal (Public Domain Dedication)
+         https://creativecommons.org/publicdomain/zero/1.0/
+
+The official pack License.txt states:
+  "License: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication"
+  "Ultimate Modular Males by @Quaternius"
+
+Quaternius introduced the Quaternius Asset License (QAL) v1.0 in August 2026.
+That license is not retroactive; this pack was obtained under the earlier CC0
+terms. See https://quaternius.com/license.html for the non-retroactivity note.
+
+This file is kept next to the asset for provenance. The asset is used as-is;
+no modifications were made to the GLB.

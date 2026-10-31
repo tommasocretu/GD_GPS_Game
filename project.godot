@@ -18,9 +18,18 @@ config/icon="res://icon.svg"
 
 [display]
 
+window/size/viewport_width=720
+window/size/viewport_height=1280
+window/size/window_width_override=360
+window/size/window_height_override=640
 window/handheld/orientation=1
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+
+[gps]
+
+fake_start_lat=45.4642
+fake_start_lon=9.1900
 
 [physics]
 
