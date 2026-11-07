@@ -8,14 +8,15 @@
 - **Chunk**: una porzione quadrata del mondo caricata e scaricata come unità.
 - **Footprint**: il poligono che descrive l'impronta a terra di un edificio.
 - **Edificio estruso**: un edificio 3D ottenuto sollevando il suo footprint.
-- **North-up**: orientamento della mappa con il nord sempre in alto, indipendente dalla direzione del giocatore.
+- **North-up**: orientamento iniziale della mappa con il nord in alto, indipendente dalla direzione del giocatore. La visuale può essere ruotata dal giocatore e torna north-up con un doppio tap.
 - **Floating origin**: tecnica per cui il mondo viene riposizionato intorno al giocatore per mantenere stabile la precisione delle coordinate.
 - **Fake GPS**: posizione simulata usata in sviluppo al posto del GPS reale.
 - **Fix valido**: un fix GPS che supera i controlli di età e accuratezza ed è utilizzabile dal modello di movimento.
 - **Target filtrato**: la posizione consolidata ottenuta combinando gli ultimi fix validi; è la posizione che l'avatar insegue.
 - **Lock da fermo**: stato in cui l'avatar resta fermo perché il GPS indica assenza di movimento, nonostante il rumore della posizione.
 - **Snap**: riposizionamento immediato dell'avatar quando un salto GPS supera la soglia di correzione.
-- **Camera rig**: nodo che segue l'avatar e applica offset, pitch e collisione della camera.
+- **Camera rig**: nodo che segue l'avatar e applica offset, pitch, yaw e collisione della camera.
+- **Yaw camera**: rotazione orizzontale della camera attorno all'avatar, controllata con un trascinamento a un dito o col mouse; 0° corrisponde a north-up.
 - **Spring arm**: braccio di collisione che accorcia la distanza della camera quando un edificio si frappone.
 - **Safe area**: porzione di schermo non coperta da notch, barre di sistema e gesture bar; l'HUD vi resta dentro.
 - **POI**: punto di interesse nel mondo di gioco, fuori dallo scope di questa slice.

@@ -8,7 +8,7 @@ Una vertical slice Android in portrait, 3D low-poly in stile Pokémon GO: un ava
 
 - Repo: Godot 4.7.2 (flatpak), mobile renderer, Jolt Physics; progetto praticamente vuoto.
 - Dispositivo di test: Fairphone Gen 6, Android 16. Distribuzione APK via WhatsApp (niente debug USB assunto).
-- Preferenze: camera obliqua fissa north-up, portrait bloccato; stile low-poly; copertura dinamica ovunque con cache; avatar low-poly CC0 animato; min SDK 26; provider tile free-tier con API key; attribuzione OSM visibile.
+- Preferenze: camera obliqua north-up di default e ruotabile con un drag orizzontale, portrait bloccato; stile low-poly; copertura dinamica ovunque con cache; avatar low-poly CC0 animato; min SDK 26; provider tile free-tier con API key; attribuzione OSM visibile.
 - Lingua: documenti e ticket in italiano; codice e identificatori in inglese.
 - Provider: MapTiler Cloud Free (solo non commerciale/R&D; per uso commerciale serve un piano a pagamento). API key in `secrets.cfg` ignorato, mai nel repo.
 - Build Android: `./scripts/build_android.sh` → `build/android/gps-game-debug.apk`; debug keystore Godot, schema v2, validata sul Fairphone.
@@ -25,7 +25,7 @@ Una vertical slice Android in portrait, 3D low-poly in stile Pokémon GO: un ava
 - [Pipeline di build Android e distribuzione APK](issues/05-android-build-pipeline.md): Gradle build con minSdk 26/targetSdk 36, script `scripts/build_android.sh`, APK debug firmata e validata sul Fairphone Gen 6.
 - [Avatar low-poly CC0 con animazioni](issues/06-avatar-asset.md): Quaternius Ultimate Modular Men `Casual_Male`, CC0, glTF 1,858 m con Idle/Walk/Run.
 - [Modello di movimento e smoothing GPS](issues/07-movement-model.md): validazione dei fix + target pesato sull'accuratezza + molla critica in `_process`; lock da fermo, snap oltre 15 m, stati `INIT/OK/WEAK/STALE/LOST/DENIED`, niente collisioni.
-- [Camera, inquadratura e composizione visiva](issues/08-camera-composition.md): prospettiva fissa north-up, FOV 50°, pitch 27°, camera 13 m/18,5 m, avatar al 65%; follow 0,15 s, braccio di collisione, HUD in safe area, nebbia 180–320 m, nessuno zoom.
+- [Camera, inquadratura e composizione visiva](issues/08-camera-composition.md): prospettiva north-up di default, FOV 50°, pitch 27°, camera 13 m/18,5 m, avatar al 65%; follow 0,15 s, braccio di collisione, HUD in safe area, nebbia 180–320 m, nessuno zoom; yaw touch orizzontale con reset north-up a doppio tap.
 - [Prototipo di movimento GPS](issues/11-gps-movement-prototype.md): implementato su desktop e in APK (fake GPS, plugin Android, avatar, camera, HUD, test headless); test sul Fairphone ancora da fare. Offset camera scalato a ×0,875 per rispettare l'8,8% di altezza apparente.
 
 ## Not yet specified

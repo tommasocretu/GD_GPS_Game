@@ -10,9 +10,9 @@ Fissare i dettagli della camera obliqua north-up: angolo, altezza, distanza, zoo
 
 ## Answer
 
-**Decisione:** camera prospettica fissa, north-up, FOV verticale 50°, pitch 27° sotto l'orizzonte, offset di 13 m in altezza e 18,5 m a sud dell'avatar. L'avatar sta al 65% dell'altezza schermo e occupa circa l'8,8%; il suolo visibile arriva a ~350 m avanti e ~8 m dietro. Follow esponenziale da 0,15 s, braccio di collisione per l'occlusione, HUD dentro la safe area, giorno fisso con nebbia 180–320 m, avatar 1:1. Nessuno zoom e nessuna rotazione di gioco.
+**Decisione:** camera prospettica north-up di default, FOV verticale 50°, pitch 27° sotto l'orizzonte, offset di 13 m in altezza e 18,5 m a sud dell'avatar. L'avatar sta al 65% dell'altezza schermo e occupa circa l'8,8%; il suolo visibile arriva a ~350 m avanti e ~8 m dietro. Follow esponenziale da 0,15 s, braccio di collisione per l'occlusione, HUD dentro la safe area, giorno fisso con nebbia 180–320 m, avatar 1:1. Nessuno zoom; la rotazione manuale orizzontale è stata aggiunta successivamente (vedi *Aggiornamento*).
 
-Il north-up fisso è accettato con la sua asimmetria: camminando verso sud si vede poco avanti, perché il bordo basso dello schermo cade a ~8 m dietro l'avatar. Non è un difetto correggibile con l'inquadratura: centrare l'avatar o aggiungere look-ahead non sposta il bordo basso e può portare la camera davanti all'avatar. Il field test del ticket 12 può riaprire la decisione e passare a una camera che segue l'heading.
+Il north-up di default è accettato con la sua asimmetria: camminando verso sud si vede poco avanti, perché il bordo basso dello schermo cade a ~8 m dietro l'avatar. Non è un difetto correggibile con l'inquadratura: centrare l'avatar o aggiungere look-ahead non sposta il bordo basso e può portare la camera davanti all'avatar. La rotazione touch permette di girare la visuale quando serve; il field test del ticket 12 può comunque riaprire la decisione e passare a una camera che segue l'heading.
 
 ### Parametri
 
@@ -42,12 +42,12 @@ Tutti i valori stanno in un unico `camera_config.gd` esportato; gli identificato
 
 ```
 WorldRoot
-└─ CameraRig              # yaw 0, segue l'avatar in x/z, y = 0
-   └─ Camera3D            # offset (0, 13, 18.5), rotazione (-27°, 0, 0)
+└─ CameraRig              # yaw iniziale 0, segue l'avatar in x/z, y = 0
+   └─ Camera3D            # offset (0, 13, 18.5) ruotato di yaw, rotazione (-27°, yaw, 0)
 ```
 
-- La camera non ruota e non guarda l'avatar con `look_at` ogni frame: l'orientamento è fisso, l'offset è ciò che mette l'avatar al 65%.
-- Il braccio di collisione accorcia solo la posizione lungo la congiungente avatar–camera; l'orientamento resta `(-27°, 0, 0)`. A lunghezza ridotta l'avatar resta al 65%, ma diventa più grande.
+- La camera non guarda l'avatar con `look_at` ogni frame: l'orientamento è determinato da pitch e yaw, l'offset ruotato è ciò che mette l'avatar al 65%.
+- Il braccio di collisione accorcia solo la posizione lungo la congiungente avatar–camera; l'orientamento resta `(-27°, yaw, 0)`. A lunghezza ridotta l'avatar resta al 65%, ma diventa più grande.
 - `Camera3D.position_smoothing` va lasciato disattivato: lo smoothing è nel `CameraRig`, altrimenti si sommano due ritardi.
 - Aggiornamento in `_process`, con `process_priority` successivo a quello del player; `delta` clampato a 0,1 s come nel modello di movimento.
 - Niente camera shake, bob, rollio o effetti cinematici.
@@ -55,8 +55,8 @@ WorldRoot
 ### Composizione e north-up
 
 - L'avatar resta orizzontalmente al centro; nessun look-ahead. Un offset in direzione di marcia sposterebbe la camera oltre l'avatar o fuori composizione.
-- Lo yaw è sempre 0: la mappa non ruota con il giocatore. La rotazione manuale a due dita è fuori scope per la slice.
-- Camminando verso sud si vede poco avanti; è accettato. Se il field test 12 lo trova frustrante, la fallback è una camera che segue l'heading (yaw = direzione di marcia, bussola HUD), da decidere in quel ticket.
+- Lo yaw parte da 0 (north-up) e non segue l'heading: la mappa ruota solo con il drag manuale, non con il giocatore.
+- Camminando verso sud si vede poco avanti; è accettato perché la rotazione touch permette di guardare avanti. Se il field test 12 lo trova comunque frustrante, la fallback è una camera che segue l'heading (yaw = direzione di marcia, bussola HUD), da decidere in quel ticket.
 - Il portrait è bloccato; con `KEEP_HEIGHT` la composizione verticale resta stabile tra i dispositivi, mentre il campo orizzontale si restringe sui display molto alti.
 
 ### Follow e stati GPS
@@ -91,7 +91,7 @@ WorldRoot
 - In basso: barra attribuzione `© MapTiler © OpenStreetMap contributors` + logo, alta ~44 dp più il safe inset; sopra la barra, toast `SNAP` con distanza, motivo e timestamp, auto-hide 3 s.
 - Banner "GPS in attesa" dopo 5 s senza `OK`/`WEAK`; banner persistente in `LOST`; istruzioni in `DENIED`.
 - In `INIT`/`DENIED`: overlay a schermo intero su colore nebbia, con icona, testo e spinner; nessun mondo finto. Al primo fix `accuracy ≤ 20 m` il mondo fa fade-in in 0,3 s.
-- Nessun joystick, pulsante di movimento o controllo camera in gioco.
+- Nessun joystick o pulsante di movimento: la camera si ruota solo trascinando sul mondo 3D.
 - Marker del fix grezzo e slider live (`smooth_time`, soglia di lock, `max_speed`) solo nelle build di debug e nascosti in release.
 - Stile, font e palette definitivi si fissano nel prototipo 09.
 
@@ -110,7 +110,8 @@ WorldRoot
 |---|---|
 | 1080×2400 portrait | Avatar al 65% ±2%, altezza apparente 8,5–9,5%, nessun clipping |
 | 1080×1920 e 1440×3120 | Composizione verticale stabile; il crop orizzontale è accettabile |
-| North-up | Yaw sempre 0; l'avatar resta al 50% orizzontale in ogni direzione |
+| North-up | Yaw iniziale 0 e reset a nord col doppio tap; l'avatar resta al 50% orizzontale a ogni yaw |
+| Rotazione touch | Drag orizzontale 180°/larghezza, orbita attorno all'avatar, composizione invariata, reset in ≤0,3 s |
 | Follow | Ritardo percepito ≤0,2 s; nessuna oscillazione; stop in ≤0,3 s |
 | Snap di 40 m | Fade 0,15 s, nessun volo visibile, evento HUD |
 | Primo anchor | Overlay fino ad accuracy ≤20 m, poi fade-in 0,3 s |
@@ -120,12 +121,30 @@ WorldRoot
 | Bordi | Nessun seam tra ground, nebbia e sfondo; nessun cielo visibile |
 | Safe area | HUD fuori da notch/status/gesture bar sul Fairphone Gen 6; 3D full-bleed |
 | Performance | 60 fps target; il raycast camera è trascurabile |
-| Debug | Camera libera e vista dall'alto solo in debug; nessun gesto in release |
+| Debug | Camera libera e vista dall'alto solo in debug; il drag di yaw resta attivo in release |
 
 ### Note e questioni residue
 
-- **North-up:** l'asimmetria di visibilità è una scelta consapevole. Se il field test 12 la boccia, la fallback è la camera heading-follow, non un look-ahead.
+- **North-up:** l'asimmetria di visibilità è una scelta consapevole, mitigata dalla rotazione manuale. Se il field test 12 la boccia, la fallback è la camera heading-follow, non un look-ahead.
 - **Collider camera:** costo da misurare nel prototipo 11; il fallback marker evita i collider ma perde l'occlusione realistica.
 - **FOV e pitch:** 50°/27° sono il punto di partenza. Se in portrait il campo orizzontale risulta troppo stretto, il parametro da muovere è il FOV, non lo zoom.
 - **Stile:** palette, materiali e HUD definitivi restano al prototipo 09; qui sono fissati solo composizione e comportamento.
-- **Zoom e rotazione manuale:** fuori scope per la slice; si valutano solo dopo il field test.
+- **Zoom:** fuori scope per la slice. **Rotazione manuale:** aggiunta come drag orizzontale a un dito, con reset a north-up a doppio tap; dettagli nella sezione *Aggiornamento*.
+
+### Aggiornamento: rotazione touch (2026-11-01)
+
+La decisione "nessuna rotazione manuale" è superata. La camera resta north-up all'avvio, ma il giocatore può ruotarla:
+
+| Aspetto | Valore |
+|---|---|
+| Gesto | Drag orizzontale a un dito sul mondo 3D; mouse col tasto sinistro su desktop |
+| Sensibilità | 180° per larghezza di schermo (`yaw_degrees_per_screen`) |
+| Slop | 6 px prima che il drag ruoti la camera (`drag_start_px`), così i tap restano affidabili |
+| Rotazione | Attorno all'avatar, stesso pitch e distanza; l'avatar resta al 50% orizzontale e al 65% verticale |
+| Persistenza | Resta dove la lasci attraverso snap, rebase e stati GPS |
+| Reset | Doppio tap entro 0,3 s e 12 px → ritorno esponenziale a nord (`yaw_reset_tau` 0,2 s) |
+| Collisione | Il braccio usa la direzione ruotata: nessun clipping aggiuntivo |
+| HUD | I `Control` consumano i tocchi; overlay, pulsanti e slider non ruotano la camera |
+| Fuori scope | Pitch, zoom, inerzia, rotazione a due dita |
+
+Implementazione: `yaw_deg`, `apply_drag()`, `add_yaw()` e `reset_yaw()` in `scripts/camera/camera_rig.gd`; parametri in `camera_config.gd`; test headless `tests/camera_yaw.gd` (orbita a 90°, composizione, drag col mouse, reset). I test di composizione restano verdi.

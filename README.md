@@ -3,8 +3,9 @@
 Prototipo di gioco GPS mobile in verticale, in stile Pokémon GO, con mappa OpenStreetMap 3D low-poly.
 
 Stato attuale: **prototipo di movimento GPS** (ticket 11) — avatar Quaternius, modello di
-smoothing GPS, camera north-up fissa, HUD di debug, plugin Android `GpsPlugin` e fake GPS
-desktop. Il rendering della mappa OSM arriverà dopo la configurazione MapTiler (ticket 13).
+smoothing GPS, camera north-up di default con rotazione touch, HUD di debug, plugin Android
+`GpsPlugin` e fake GPS desktop. Il rendering della mappa OSM arriverà dopo la configurazione
+MapTiler (ticket 13).
 
 ## Build Android
 
@@ -34,6 +35,9 @@ Senza il plugin Android parte il fake GPS:
 
 - `WASD`: cammina a 1,4 m/s;
 - `Shift` + `WASD`: corri a 5 m/s;
+- trascina a sinistra/destra (touch o tasto sinistro del mouse): ruota la visuale
+  attorno all'avatar, 180° per larghezza di schermo;
+- doppio tap (o doppio click) sul mondo: riporta dolcemente la camera a north-up;
 - `F2`: pannello slider debug (`smooth_time`, soglia di lock, `max_speed`);
 - `F3`: marker magenta del fix GPS grezzo.
 
@@ -45,14 +49,16 @@ flatpak run org.godotengine.Godot --path . -- --auto-walk
 
 ## Test
 
-Test headless deterministici del piano tangente e del modello di movimento:
+Test headless deterministici di piano tangente, modello di movimento e camera:
 
 ```bash
 flatpak run org.godotengine.Godot --headless --path . --script res://tests/run_tests.gd
 flatpak run org.godotengine.Godot --headless --path . --script res://tests/camera_composition.gd
+flatpak run org.godotengine.Godot --headless --path . --script res://tests/camera_yaw.gd
 ```
 
 Il primo copre: proiezione e tile OSM, anchor a ≤20 m, lock da fermo, rettilineo,
 salti da 10 m e 40 m, STALE/LOST, accuratezza debole, conferma outlier, heading e rebase.
 Il secondo verifica l'inquadratura: avatar al 65% ±2%, altezza proiettata 8,5–9,5%,
-centrato orizzontalmente.
+centrato orizzontalmente. Il terzo verifica la rotazione touch: orbita attorno all'avatar,
+composizione invariata a 90°, drag col mouse e reset a north-up con doppio tap.
